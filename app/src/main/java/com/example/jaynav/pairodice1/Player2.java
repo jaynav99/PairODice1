@@ -12,24 +12,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class Player2 extends ActionBarActivity {
     private FrameLayout die1, die2;
-    private TextView roundscore,p1score,p2score;
     private Button roll, hold;
-    int totalplayer1score = 0;
-    int totalplayer2score;
+    private TextView roundscore,p1score,p2score;
+    int totalplayer2score = 0;
+    private int totalplayer1score;
     int totalroundscore;
-    int currentroundscore = 0;
+    int currentroundscore =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.player2);
 
         die1 = (FrameLayout) findViewById(R.id.die1);
         die2 = (FrameLayout) findViewById(R.id.die2);
@@ -38,19 +37,17 @@ public class MainActivity extends ActionBarActivity {
         p2score = (TextView) findViewById(R.id.p2);
 
         Intent intent = getIntent();
-        totalplayer2score = intent.getIntExtra("TotalPlayer2Score", totalplayer2score);
         totalplayer1score = intent.getIntExtra("TotalPlayer1Score",totalplayer1score);
-        Toast.makeText(this, "The score is: " + totalplayer2score, Toast.LENGTH_LONG).show();
-        p2score.setText("P2: " + totalplayer2score);
+        totalplayer2score = intent.getIntExtra("TotalPlayer2Score",totalplayer2score);
+        Toast.makeText(this, "The score is: " + totalplayer1score, Toast.LENGTH_LONG).show();
         p1score.setText("P1: " + totalplayer1score);
-
+        p2score.setText("P2: " + totalplayer2score);
 
         roll = (Button) findViewById(R.id.button);
         roll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rollDice();
-
 
             }
         });
@@ -59,12 +56,12 @@ public class MainActivity extends ActionBarActivity {
         hold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                totalplayer1score = currentroundscore + totalplayer1score;
-                if(totalplayer1score >= 100)
+                totalplayer2score = currentroundscore + totalplayer2score;
+                if(totalplayer2score >= 100)
                 {
-                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(Player2.this).create();
                     alertDialog.setTitle("Winnner !!");
-                    alertDialog.setMessage("Congratulations Player1 has won !!!!");
+                    alertDialog.setMessage("Congratulations Player2 has won !!!!");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -73,9 +70,9 @@ public class MainActivity extends ActionBarActivity {
                             });
                     alertDialog.show();
                 }else {
-                    Intent intent = new Intent(MainActivity.this, Player2.class);
-                    intent.putExtra("TotalPlayer1Score", totalplayer1score);
+                    Intent intent = new Intent(Player2.this, MainActivity.class);
                     intent.putExtra("TotalPlayer2Score", totalplayer2score);
+                    intent.putExtra("TotalPlayer1Score", totalplayer1score);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
                 }
@@ -93,22 +90,21 @@ public class MainActivity extends ActionBarActivity {
         setDie(val1, die1);
         setDie(val2, die2);
 
-         totalroundscore = val1 + val2;
-
+        totalroundscore = val1 + val2;
 
         if(val1 == 1 || val2 == 1) {
             roundscore.setText("Round: 0");
             totalroundscore = 0;
-            totalplayer1score = totalroundscore + totalplayer1score;
-            Intent intent = new Intent(MainActivity.this,Player2.class);
-            intent.putExtra("TotalPlayer1Score", totalplayer1score);
+            totalplayer2score = totalroundscore + totalplayer2score;
+            Intent intent = new Intent(Player2.this,MainActivity.class);
             intent.putExtra("TotalPlayer2Score", totalplayer2score);
+            intent.putExtra("TotalPlayer1Score", totalplayer1score);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         }
         else {
             roundscore.setText("Round: " + totalroundscore);
-            p1score.setText("P1: " + totalplayer1score);
+            p2score.setText("P2: " + totalplayer2score);
             currentroundscore = totalroundscore + currentroundscore;
         }
     }
@@ -162,3 +158,4 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
